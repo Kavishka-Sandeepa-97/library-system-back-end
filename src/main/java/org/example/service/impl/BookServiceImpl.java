@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
@@ -31,5 +33,21 @@ public class BookServiceImpl implements BookService {
     public Iterable<BookEntity> getBooks() {
         Iterable<BookEntity> all = bookRepository.findAll();
         return all;
+    }
+
+    @Override
+    public boolean deleteBookById(Long id) {
+        if (bookRepository.existsById(id)){
+            bookRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Book getBook(Long id) {
+
+        Optional<BookEntity> byId = bookRepository.findById(id);
+        return modelMapp.map(byId,Book.class);
     }
 }
